@@ -56,7 +56,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
     """.trim();
 
     final encrypted = Aes256.encrypt(originalJson, widget.keyString);
-
+    print('Checking encryption -- ${encrypted}');
 
   }
 
