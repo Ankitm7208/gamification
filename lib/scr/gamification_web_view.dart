@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -43,10 +44,10 @@ class _GamificationWebViewState extends State<GamificationWebView> {
 
     var originalJson = """
         {
-          "clientID": ${widget.clientId}",
-          "key": ${widget.keyValue},
-          "userID": ${widget.userID},
-          "username": ${widget.username},
+          "clientID": "${widget.clientId}",
+          "key": "${widget.keyValue}",
+          "userID": "${widget.userID}",
+          "username": "${widget.username}",
           "utm_param1": "",
           "utm_param2": "",
           "utm_param3": "",
@@ -55,8 +56,16 @@ class _GamificationWebViewState extends State<GamificationWebView> {
         }
     """.trim();
 
-    final encrypted = Aes256.encrypt(originalJson, widget.keyString);
-    print('Checking encryption -- ${encrypted}');
+
+    final encrypted = Aes256.encrypt(originalJson, "bR5z6*r\$00p#Eno__odrEgeW");
+
+    String encoded = base64.encode(utf8.encode(encrypted));
+
+    debugPrint('Checking -- ${encoded}');
+    var finalUrl = "${widget.baseUrl}?data=$encoded";
+    debugPrint('final url -- $finalUrl');
+
+    webViewController.loadRequest(Uri.parse(finalUrl));
 
   }
 
