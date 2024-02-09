@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'Aes.dart';
 
 class GamificationWebView extends StatefulWidget {
@@ -26,15 +25,22 @@ class GamificationWebView extends StatefulWidget {
 
 class _GamificationWebViewState extends State<GamificationWebView> {
 
-  late WebViewController webViewController;
+
+  final GlobalKey webViewKey = GlobalKey();
+
+  InAppWebViewController? webViewController;
+  InAppWebViewSettings settings = InAppWebViewSettings(
+      isInspectable: false,
+      mediaPlaybackRequiresUserGesture: false,
+      allowsInlineMediaPlayback: true,
+      iframeAllow: "camera; microphone",
+      iframeAllowFullscreen: true);
+
+  String? finalUrl;
 
   @override
   void initState() {
     super.initState();
-
-    webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000));
 
     encryptJson();
 
@@ -62,11 +68,9 @@ class _GamificationWebViewState extends State<GamificationWebView> {
     String encoded = base64.encode(utf8.encode(encrypted));
 
     debugPrint('Checking -- ${encoded}');
-    var finalUrl = "${widget.baseUrl}?data=$encoded";
+    finalUrl = "${widget.baseUrl}?data=$encoded";
     debugPrint('final url -- $finalUrl');
-
-    webViewController.loadRequest(Uri.parse(finalUrl));
-
+    // webViewController.loadUrl(urlRequest: URLRequest(url: WebUri(finalUrl)));
   }
 
   @override
@@ -76,16 +80,53 @@ class _GamificationWebViewState extends State<GamificationWebView> {
 
         var canGoBack = false;
 
-          if(await webViewController.canGoBack()){
-            webViewController.goBack();
-            canGoBack = false;
-          }else{
-            canGoBack = true;
-          }
+        if(webViewController == null){
+          return true;
+        }
+
+        if(await webViewController!.canGoBack()){
+          webViewController!.goBack();
+          canGoBack = false;
+        }else{
+          canGoBack = true;
+        }
         return canGoBack;
       },
       child: Scaffold(
-        body: SafeArea(child: WebViewWidget(controller: webViewController)),
+        body: SafeArea(child:
+        InAppWebView(
+          key: webViewKey,
+          initialUrlRequest: URLRequest(url: WebUri(finalUrl ?? '')),
+          initialSettings: settings,
+          onWebViewCreated: (controller) {
+            webViewController = controller;
+          },
+          onLoadStart: (controller, url) {
+          },
+          onPermissionRequest: (controller, request) async {
+            return PermissionResponse(
+                resources: request.resources,
+                action: PermissionResponseAction.GRANT);
+          },
+          shouldOverrideUrlLoading:
+              (controller, navigationAction) async {
+            var uri = navigationAction.request.url!;
+            return NavigationActionPolicy.ALLOW;
+          },
+          onLoadStop: (controller, url) async {
+
+          },
+          onReceivedError: (controller, request, error) {
+          },
+          onProgressChanged: (controller, progress) {
+          },
+          onUpdateVisitedHistory: (controller, url, androidIsReload) {
+          },
+          onConsoleMessage: (controller, consoleMessage) {
+            debugPrint(consoleMessage.message);
+          },
+        ),
+        ),
       ),
     );
   }
