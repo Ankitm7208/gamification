@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'Aes.dart';
@@ -37,6 +38,8 @@ class _GamificationWebViewState extends State<GamificationWebView> {
       iframeAllowFullscreen: true);
 
   String? finalUrl;
+  bool canGoBack = true;
+
 
   @override
   void initState() {
@@ -66,16 +69,13 @@ class _GamificationWebViewState extends State<GamificationWebView> {
     final encrypted = Aes256.encrypt(originalJson, "bR5z6*r\$00p#Eno__odrEgeW");
 
     String encoded = base64.encode(utf8.encode(encrypted));
-
-    debugPrint('Checking -- ${encoded}');
     finalUrl = "${widget.baseUrl}?data=$encoded";
-    debugPrint('final url -- $finalUrl');
     // webViewController.loadUrl(urlRequest: URLRequest(url: WebUri(finalUrl)));
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return ConditionalWillPopScope(
       onWillPop: ()async{
 
         var canGoBack = false;
@@ -92,6 +92,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
         }
         return canGoBack;
       },
+      shouldAddCallback: canGoBack,
       child: Scaffold(
         body: SafeArea(child:
         InAppWebView(
@@ -114,7 +115,8 @@ class _GamificationWebViewState extends State<GamificationWebView> {
             return NavigationActionPolicy.ALLOW;
           },
           onLoadStop: (controller, url) async {
-
+            canGoBack = await controller.canGoBack();
+            setState(() {});
           },
           onReceivedError: (controller, request, error) {
           },
