@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'Aes.dart';
 
 class GamificationWebView extends StatefulWidget {
@@ -27,6 +28,8 @@ class GamificationWebView extends StatefulWidget {
 class _GamificationWebViewState extends State<GamificationWebView> {
 
 
+
+
   final GlobalKey webViewKey = GlobalKey();
 
   InAppWebViewController? webViewController;
@@ -38,8 +41,8 @@ class _GamificationWebViewState extends State<GamificationWebView> {
       iframeAllowFullscreen: true);
 
   String? finalUrl;
-  bool canGoBack = true;
 
+  bool canGoBack = true;
 
   @override
   void initState() {
@@ -61,7 +64,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
           "utm_param2": "",
           "utm_param3": "",
           "utm_param4": "",
-          "utm_source":"${Platform.isAndroid ? 'Android' : 'IOS'}"
+          "utm_source":"${Platform.isAndroid ? 'Android' : 'Android'}"
         }
     """.trim();
 
@@ -69,7 +72,9 @@ class _GamificationWebViewState extends State<GamificationWebView> {
     final encrypted = Aes256.encrypt(originalJson, "bR5z6*r\$00p#Eno__odrEgeW");
 
     String encoded = base64.encode(utf8.encode(encrypted));
+
     finalUrl = "${widget.baseUrl}?data=$encoded";
+
     // webViewController.loadUrl(urlRequest: URLRequest(url: WebUri(finalUrl)));
   }
 
@@ -77,7 +82,6 @@ class _GamificationWebViewState extends State<GamificationWebView> {
   Widget build(BuildContext context) {
     return ConditionalWillPopScope(
       onWillPop: ()async{
-
         var canGoBack = false;
 
         if(webViewController == null){
@@ -90,6 +94,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
         }else{
           canGoBack = true;
         }
+
         return canGoBack;
       },
       shouldAddCallback: canGoBack,
@@ -102,16 +107,21 @@ class _GamificationWebViewState extends State<GamificationWebView> {
           onWebViewCreated: (controller) {
             webViewController = controller;
           },
-          onLoadStart: (controller, url) {
+          onLoadStart: (controller, url) async{
+            debugPrint('Checking taeget -- ${url}');
           },
           onPermissionRequest: (controller, request) async {
             return PermissionResponse(
                 resources: request.resources,
                 action: PermissionResponseAction.GRANT);
           },
-          shouldOverrideUrlLoading:
-              (controller, navigationAction) async {
-            var uri = navigationAction.request.url!;
+          shouldOverrideUrlLoading: (controller, shouldOverrideUrlLoadingRequest) async {
+            debugPrint('Checking url shouldOverrideUrlLoading -- ${shouldOverrideUrlLoadingRequest.request.url}');
+            if(shouldOverrideUrlLoadingRequest.request.url.toString().contains('productAfflinkApi.php')){
+              //Open other site url in external browser
+              launchUrlString(shouldOverrideUrlLoadingRequest.request.url.toString());
+              return NavigationActionPolicy.CANCEL;
+            }
             return NavigationActionPolicy.ALLOW;
           },
           onLoadStop: (controller, url) async {
@@ -120,7 +130,8 @@ class _GamificationWebViewState extends State<GamificationWebView> {
           },
           onReceivedError: (controller, request, error) {
           },
-          onProgressChanged: (controller, progress) {
+          onProgressChanged: (controller, progress) async{
+
           },
           onUpdateVisitedHistory: (controller, url, androidIsReload) {
           },
@@ -132,4 +143,5 @@ class _GamificationWebViewState extends State<GamificationWebView> {
       ),
     );
   }
+
 }
