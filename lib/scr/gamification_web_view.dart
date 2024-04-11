@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'Aes.dart';
@@ -80,6 +81,10 @@ class _GamificationWebViewState extends State<GamificationWebView> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return ConditionalWillPopScope(
       onWillPop: ()async{
         var canGoBack = false;
@@ -119,7 +124,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
             debugPrint('Checking url shouldOverrideUrlLoading -- ${shouldOverrideUrlLoadingRequest.request.url}');
             if(shouldOverrideUrlLoadingRequest.request.url.toString().contains('productAfflinkApi.php')){
               //Open other site url in external browser
-              launchUrlString(shouldOverrideUrlLoadingRequest.request.url.toString());
+              launchUrlString(shouldOverrideUrlLoadingRequest.request.url.toString(),mode: LaunchMode.inAppWebView);
               return NavigationActionPolicy.CANCEL;
             }
             return NavigationActionPolicy.ALLOW;
