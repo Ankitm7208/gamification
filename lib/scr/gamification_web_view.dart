@@ -65,7 +65,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
           "utm_param2": "",
           "utm_param3": "",
           "utm_param4": "",
-          "utm_source":"${Platform.isAndroid ? 'Android' : 'Android'}"
+          "utm_source":"${Platform.isAndroid ? 'Android' : 'iOS'}"
         }
     """.trim();
 
