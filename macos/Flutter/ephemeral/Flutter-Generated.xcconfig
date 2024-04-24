@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/joistic/flutter
-FLUTTER_APPLICATION_PATH=/Users/joistic/Android studio projects/gamification
+FLUTTER_ROOT=/Users/ankitmehta/flutter
+FLUTTER_APPLICATION_PATH=/Users/ankitmehta/StudioProjects/gamification
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=0.0.1
