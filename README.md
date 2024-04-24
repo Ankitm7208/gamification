@@ -11,9 +11,6 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
 ## Setup
 Add this below line to you pubspec.yamal
 ```yaml
@@ -26,16 +23,15 @@ Add this below line to you pubspec.yamal
 
 
 ## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+To use this package just call below widget
 
 ```dart
-const like = 'sample';
+GamificationWebView(
+            clientId: 'id',
+            keyValue: 'value',
+            userID: 'id',
+            username: 'name',
+            keyString: 'key',
+            baseUrl: 'baseUrl',)
 ```
 
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
