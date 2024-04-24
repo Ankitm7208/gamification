@@ -124,7 +124,7 @@ class _GamificationWebViewState extends State<GamificationWebView> {
             debugPrint('Checking url shouldOverrideUrlLoading -- ${shouldOverrideUrlLoadingRequest.request.url}');
             if(shouldOverrideUrlLoadingRequest.request.url.toString().contains('productAfflinkApi.php')){
               //Open other site url in external browser
-              launchUrlString(shouldOverrideUrlLoadingRequest.request.url.toString(),mode: LaunchMode.inAppWebView);
+              launchUrlString(shouldOverrideUrlLoadingRequest.request.url.toString(),mode: Platform.isIOS ? LaunchMode.inAppWebView : LaunchMode.externalApplication);
               return NavigationActionPolicy.CANCEL;
             }
             return NavigationActionPolicy.ALLOW;
