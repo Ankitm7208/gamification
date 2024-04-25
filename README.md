@@ -38,7 +38,8 @@ Widget build(BuildContext context) {
       userID: 'id',
       username: 'name',
       keyString: 'key',
-      baseUrl: 'baseUrl',);
+      baseUrl: 'baseUrl',)
+  );
 }
 
 ```
