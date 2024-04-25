@@ -29,12 +29,17 @@ You can install this package by adding this line to your pubspec.yaml
 To use this package add this GamificationWebView widget to your screen and pass the credentials
 
 ```dart
-GamificationWebView(
-            clientId: 'id',
-            keyValue: 'value',
-            userID: 'id',
-            username: 'name',
-            keyString: 'key',
-            baseUrl: 'baseUrl',)
+  @override
+Widget build(BuildContext context) {
+  return const Scaffold(
+    body: GamificationWebView(
+      clientId: 'id',
+      keyValue: 'value',
+      userID: 'id',
+      username: 'name',
+      keyString: 'key',
+      baseUrl: 'baseUrl',);
+}
+
 ```
 
