@@ -11,8 +11,12 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-## Setup
-Add this below line to you pubspec.yamal
+# Gamification for android & ios platform
+
+This package provides integration with gamification provided by The Logical Banya.
+
+## Installation
+You can install this package by adding this line to your pubspec.yaml
 ```yaml
   gamification:
     git:
@@ -21,9 +25,8 @@ Add this below line to you pubspec.yamal
 ```
 
 
-
 ## Usage
-To use this package just call below widget
+To use this package add this GamificationWebView widget to your screen and pass the credentials
 
 ```dart
 GamificationWebView(
