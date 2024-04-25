@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-# Gamification for android & ios platform
+# Gamification for Flutter
 
 This package provides integration with gamification provided by The Logical Banya.
 
